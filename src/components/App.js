@@ -6,10 +6,17 @@ function App() {
   const [init, setInit] = useState(false);  
   const [isLoggedIn, setIsLoggedIn] = useState(false);    // 로그인 여부 확인
 
+  const [userObj, setUserObj] = useState(null);   
+
   useEffect(() => {
     authService.onAuthStateChanged( (user) => {
-      if(user)  setIsLoggedIn(true);        
-      else      setIsLoggedIn(false);      
+      if(user){
+        setIsLoggedIn(true);        
+        setUserObj(user);
+      }  
+      else{
+        setIsLoggedIn(false);              
+      }      
       setInit(true);
     })
   }, [])
@@ -20,7 +27,7 @@ function App() {
 
   return (
     <>
-      {init ? <AppRouter isLoggedIn = {isLoggedIn} /> : "Initializing...."}
+      {init ? <AppRouter isLoggedIn = {isLoggedIn} userObj={userObj} /> : "Initializing...."}
       <footer>&copy; Nwitter {new Date().getFullYear()}</footer>
     </>
   );

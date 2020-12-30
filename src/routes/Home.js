@@ -1,31 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { dbService } from "fbase";
 
-const Home = () => {
+const Home = ( { userObj }) => {
     const [nweet, setNweet] = useState("");    
     const [nweets, setNweets] = useState([]);
     // fire base db select
-    const getNweets = async() => {
+    // old version
+    /*const getNweets = async() => {
         const dbNweets = await dbService.collection("nweets").get();
         dbNweets.forEach((document) => {
             const nweetObject = {
                 ...document.data(),     // spread attribute 기능.. es6 참고
-                id : document.id
+                id : document.id                
             }
             setNweets((prev) => [nweetObject, ...prev]);      // 함수를 전달할 경우 이전 값을 불러올 수 있음 리액트의 경우
         });        
-    }
+    }*/
 
     useEffect(() => {
-        getNweets();
+        //getNweets();  // old version
+        dbService.collection("nweets").onSnapshot(snapshot => {
+            const nweetArray = snapshot.docs.map((doc) => ({id : doc.id, ...doc.data()}));
+            setNweets(nweetArray);
+        });
     }, []);
 
     const onSubmit = async (event) => {
         event.preventDefault();
         // fire base db insert
         await dbService.collection("nweets").add({
-            nweet,
-            createdAt : Date.now()            
+            text : nweet,
+            createdAt : Date.now(),
+            creatorId : userObj.uid            
         });
         setNweet("");
     };
@@ -42,7 +48,8 @@ const Home = () => {
             </form>
             <div>
                 {nweets.map((nweet) => <div key={nweet.id}>
-                    <h4>{nweet.nweet}</h4>
+                    <h4>{nweet.text}</h4>
+                    <p>{nweet.creatorId}</p>
                     </div>)}
             </div>
         </div>

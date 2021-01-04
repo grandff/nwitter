@@ -41,9 +41,16 @@ const Home = ( { userObj }) => {
         setNweet(value);
     };
 
+    // image file input
     const onFileChange = (event) => {
-        console.log(event);
-    }
+        const {target : {files}} = event;
+        const theFile = files[0];          
+        const reader = new FileReader();
+        reader.onloadend = (finishedEvent) => {
+            
+        }
+        reader.readAsDataURL(theFile);
+    };
 
     return (
         <div>

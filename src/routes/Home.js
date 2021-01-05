@@ -30,18 +30,26 @@ const Home = ( { userObj }) => {
 
     const onSubmit = async (event) => {
         event.preventDefault();
-        // 사진에 이름을 주는 작업을 랜덤으로 돌려도 되고 uuid 를 사용해도 됨 여기선 uuid 사용함
-        const fileRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`)        // image insert
-        const response = await fileRef.putString(attachment, "data_url");
-        console.log(response);
-        // fire base db insert
-        /*
-        await dbService.collection("nweets").add({
+        let attachmentUrl = "";
+        // 이미지 첨부 확인
+        if (attachment !== "") {            
+            // 사진에 이름을 주는 작업을 랜덤으로 돌려도 되고 uuid 를 사용해도 됨 여기선 uuid 사용함
+            const attchmentRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`)        // image insert
+            const response = await attchmentRef.putString(attachment, "data_url");
+            attachmentUrl = await response.ref.getDownloadURL();            
+        }
+
+        const nweetObj = {
             text : nweet,
             createdAt : Date.now(),
-            creatorId : userObj.uid            
-        });
-        setNweet("");*/
+            creatorId : userObj.uid,
+            attachmentUrl
+        }
+
+        // fire base db insert        
+        await dbService.collection("nweets").add(nweetObj);
+        setNweet("");
+        setAttachment("");
     };
     const onChange = (event) => {
         const {target : {value}} = event;

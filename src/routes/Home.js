@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { dbService } from "fbase";
+import {v4 as uuidv4} from "uuid";
+import { dbService, storageService } from "fbase";
 import Nweet from "../components/Nweet"
 
 const Home = ( { userObj }) => {
@@ -29,13 +30,18 @@ const Home = ( { userObj }) => {
 
     const onSubmit = async (event) => {
         event.preventDefault();
+        // 사진에 이름을 주는 작업을 랜덤으로 돌려도 되고 uuid 를 사용해도 됨 여기선 uuid 사용함
+        const fileRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`)        // image insert
+        const response = await fileRef.putString(attachment, "data_url");
+        console.log(response);
         // fire base db insert
+        /*
         await dbService.collection("nweets").add({
             text : nweet,
             createdAt : Date.now(),
             creatorId : userObj.uid            
         });
-        setNweet("");
+        setNweet("");*/
     };
     const onChange = (event) => {
         const {target : {value}} = event;

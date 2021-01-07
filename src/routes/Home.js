@@ -6,7 +6,7 @@ import Nweet from "../components/Nweet"
 const Home = ( { userObj }) => {
     const [nweet, setNweet] = useState("");    
     const [nweets, setNweets] = useState([]);
-    const [attachment, setAttachment] = useState();
+    const [attachment, setAttachment] = useState("");
     // fire base db select
     // old version
     /*const getNweets = async() => {

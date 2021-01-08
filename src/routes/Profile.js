@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import {authService, dbService} from "fbase";
 import {useHistory} from "react-router-dom";
 
-const Profile = ({userObj}) => {
+const Profile = ({refreshUser, userObj}) => {
     const history = useHistory();
     const [newDisplayName, setNewDiplayName] = useState(userObj.displayName);
     const onLogOutClick = () => {
@@ -12,7 +12,6 @@ const Profile = ({userObj}) => {
 
     const getMyNweets = async () => {
         const nweets = await dbService.collection("nweets").where("creatorId", "==", userObj.uid).orderBy("createdAt").get();
-
     };
 
     useEffect(() => {
@@ -27,6 +26,7 @@ const Profile = ({userObj}) => {
             await userObj.updateProfile({
                 displayName : newDisplayName
             });
+            refreshUser();
         }
     }
 

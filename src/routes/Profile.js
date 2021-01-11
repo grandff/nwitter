@@ -5,13 +5,14 @@ import {useHistory} from "react-router-dom";
 const Profile = ({refreshUser, userObj}) => {
     const history = useHistory();
     const [newDisplayName, setNewDiplayName] = useState(userObj.displayName);
+
     const onLogOutClick = () => {
         authService.signOut();
-        history.push("/");      // redirect 태그를 안쓰고 처리
+        history.push("/");      // redirect 태그를 안쓰고 처리        
     };
 
     const getMyNweets = async () => {
-        const nweets = await dbService.collection("nweets").where("creatorId", "==", userObj.uid).orderBy("createdAt").get();
+        await dbService.collection("nweets").where("creatorId", "==", userObj.uid).orderBy("createdAt").get();
     };
 
     useEffect(() => {

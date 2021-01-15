@@ -17,7 +17,7 @@ const Home = ( { userObj }) => {
                 id : document.id                
             }
             setNweets((prev) => [nweetObject, ...prev]);      // 함수를 전달할 경우 이전 값을 불러올 수 있음 리액트의 경우
-        });        
+        });         
     }*/
 
     useEffect(() => {
